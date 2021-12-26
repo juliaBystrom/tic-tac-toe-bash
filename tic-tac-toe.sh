@@ -5,6 +5,8 @@
 declare -i board_width=43
 declare -i game_width=80
 declare -i game_height=20
+declare -i player_in_turn=1
+
 BOLD='\x1b[1m'
 RESET_BOLT='\x1b[22m'
 WALL_CHAR='█'
@@ -36,9 +38,18 @@ declare -ai board=(0 1 1 0 2 0 0 2 0)
 declare -a player1=(' \       / ' '   \   /   ' '     X     ' '   /   \   ' ' /       \ ')
 declare -a player2=('    ▄▄▄    ' ' ▟█▘   ▝█▙ ' '▐         ▌' ' ▜█▖   ▗█▛ ' '    ▀▀▀    ')
 
+switch_player_in_turn()
+{
+if [ $player_in_turn -eq 1 ]; then
+    player_in_turn=2
+else
+    player_in_turn=1
+fi
+}
+
 draw_board()
 {
-clear
+#clear
 for row in {0..2}; do
     printf "$BOLD"
     printf "$WALL_CHAR%.0s" $(seq $board_width)
@@ -58,6 +69,7 @@ for row in {0..2}; do
                     printf " $WALL_CHAR"
                     ;;
                 *)
+                    # Error
                     printf "%${SQUARE_WIDTH}sE$WALL_CHAR"
                     ;;
             esac
@@ -70,7 +82,40 @@ printf "\n"
 printf "$RESET_BOLT"
 }
 
-draw_board
+square_is_playable()
+{
+if [ ${board[$1-1]} -eq 0 ]; then
+    echo true
+else
+    echo false
+fi
+}
+
+get_player_move()
+{
+while true; do
+    INPUT="no"
+    reg='^[1-9]$'
+    while [[ ! $INPUT =~ $reg ]]; do
+        read -n 1 -p "NR " -r INPUT
+    done
+    playable=$(square_is_playable $INPUT)
+    if $playable; then
+        echo $INPUT
+        break
+    fi
+done
+}
+
+
+while true; do 
+    draw_board
+    move=$(get_player_move)
+    printf "\n $move \n"
+    switch_player_in_turn
+done
+    
+
 
 #Make cursor visible
 printf '\x1b[?25h'
