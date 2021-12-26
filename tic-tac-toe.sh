@@ -10,7 +10,7 @@ RESET_BOLT='\x1b[22m'
 WALL_CHAR='█'
 BLOCK_CHAR='▃'
 let SQUARE_WIDTH=(board_width-4)/3-1
-let SQUARE_HEIGHT=board_width/7
+let SQUARE_HEIGHT=board_width/7-1
 
 
 # Hide cursor
@@ -33,7 +33,8 @@ printf '\x1b[38;5;42m'
 ##################################################################################
 declare -ai board=(0 1 1 0 2 0 0 2 0)
 
-
+declare -a player1=(' \       / ' '   \   /   ' '     X     ' '   /   \   ' ' /       \ ')
+declare -a player2=('    ▄▄▄    ' ' ▟█▘   ▝█▙ ' '▐         ▌' ' ▜█▖   ▗█▛ ' '    ▀▀▀    ')
 
 draw_board()
 {
@@ -49,10 +50,12 @@ for row in {0..2}; do
                     printf "%${SQUARE_WIDTH}s $WALL_CHAR"
                     ;;
                 1)
-                    printf "%${SQUARE_WIDTH}s1$WALL_CHAR"
+                    printf " ${player1[row_height-1]}"
+                    printf " $WALL_CHAR"
                     ;;
                 2)
-                    printf "%${SQUARE_WIDTH}s2$WALL_CHAR"
+                    printf " ${player2[row_height-1]}"
+                    printf " $WALL_CHAR"
                     ;;
                 *)
                     printf "%${SQUARE_WIDTH}sE$WALL_CHAR"
