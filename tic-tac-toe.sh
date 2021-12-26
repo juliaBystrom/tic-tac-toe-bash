@@ -2,7 +2,7 @@
 
 # Initial graphic set up
 
-declare -i board_width=31
+declare -i board_width=43
 declare -i game_width=80
 declare -i game_height=20
 BOLD='\x1b[1m'
@@ -45,6 +45,3 @@ draw_board
 
 #Make cursor visible
 printf '\x1b[?25h'
-
-
-
